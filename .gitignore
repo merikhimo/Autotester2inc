@@ -27,8 +27,3 @@ vendor/
 node_modules/
 
 # Flutter/Dart specific
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-pubspec.lock
