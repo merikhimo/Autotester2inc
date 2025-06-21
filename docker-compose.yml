@@ -36,8 +36,8 @@ services:
     container_name: autotester-frontend
     networks:
       - autotester-network
-    volumes:
-      - frontend-build:/usr/share/nginx/html
+    # УДАЛЕН volumes (сборка происходит в Dockerfile)
+    command: sh -c "flutter build web && tail -f /dev/null"  # Автосборка при запуске
 
   nginx:
     image: nginx:latest
@@ -45,9 +45,9 @@ services:
       - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./frontend/build/web:/usr/share/nginx/html:ro
+      - ./frontend/build/web:/usr/share/nginx/html:ro  # Прямое монтирование билда
     depends_on:
-      - frontend
+      - frontend  # Ждем сборки фронтенда
       - go-api
     networks:
       - autotester-network
@@ -56,6 +56,4 @@ networks:
   autotester-network:
     driver: bridge
 
-volumes:
-   frontend-build:
-
+# УДАЛЕН volumes (ненужный именованный том)
