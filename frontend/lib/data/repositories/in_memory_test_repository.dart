@@ -14,7 +14,7 @@ class InMemoryTestRepository extends TestRepository {
   }) async {
     final response = await http.post(
       Uri.parse(
-          'http://31.129.111.114:8080/api/tests'),
+          '/api/tests'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'url': url,

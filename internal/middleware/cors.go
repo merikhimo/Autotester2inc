@@ -6,8 +6,8 @@ import (
 
 func CORS(next http.Handler) http.Handler {
 	allowedOrigins := map[string]bool{
-		"http://localhost:3000": true,
-		"http://localhost:3001": true,
+		"http://python-api:3000": true,
+		"http://frontend:3001":   true,
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
