@@ -87,7 +87,9 @@ class _TestTileState extends State<TestTile> {
                                 testProvider.addTest(test);
                               }
                             },
-                            style: TextStyle(fontSize: 12),
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w500),
+                            cursorColor: Colors.black,
                             controller: controller,
                             decoration: const InputDecoration(
                               isCollapsed: true,

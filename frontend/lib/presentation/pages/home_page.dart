@@ -79,13 +79,13 @@ class _HomePageState extends State<HomePage>
 
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://31.129.111.114:808/api/checkurl'),
+        Uri.parse('http://31.129.111.114:8080/api/checkurl'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'url': url}),
       );
 
       final data = json.decode(response.body);
+      print("Response body: ${response.body}");
 
       if (data['status'] == 'success') {
         Navigator.of(context).push(MaterialPageRoute(
@@ -165,6 +165,7 @@ class _HomePageState extends State<HomePage>
                             ),
                           ),
                           child: TextFormField(
+                            style: TextStyle(fontWeight: FontWeight.w500),
                             onFieldSubmitted: (text) {
                               sendUrl(testProvider);
                             },
