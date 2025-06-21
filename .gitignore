@@ -1,0 +1,41 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build
+bin/
+*.exe
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Frontend (ignore everything except lib and Dockerfile)
+Frontend/*
+!Frontend/lib/
+!Frontend/Dockerfile
+!Frontend/test/
+!Frontend/web/
+!Frontend/pubspec.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+
+# Dependencies
+vendor/
+node_modules/
+
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock

@@ -1,0 +1,61 @@
+version: '3.3'
+
+services:
+  go-api:
+    build:
+      context: .
+      dockerfile: cmd/Dockerfile
+    container_name: autotester-go
+    ports:
+      - "8081:8081"
+    environment:
+      - TIMEOUT=3
+      - PYTHON_API_URL=http://python-api:3000
+      - FRONTEND_URL=http://frontend:3001
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - autotester-network
+    depends_on:
+      - python-api
+
+  python-api:
+    build:
+      context: ./python
+      dockerfile: Dockerfile.py
+    container_name: autotester-python
+    ports:
+      - "3000:3000"
+    networks:
+      - autotester-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.flutter
+    container_name: autotester-frontend
+    networks:
+      - autotester-network
+    volumes:
+      - frontend-build:/usr/share/nginx/html
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - frontend-build:/usr/share/nginx/html:ro
+    depends_on:
+      - frontend
+      - go-api
+    networks:
+      - autotester-network
+
+networks:
+  autotester-network:
+    driver: bridge
+
+volumes:
+   frontend-build:
+
