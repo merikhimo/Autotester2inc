@@ -15,13 +15,6 @@ bin/
 *.log
 logs/
 
-# Frontend (ignore everything except lib and Dockerfile)
-Frontend/*
-!Frontend/lib/
-!Frontend/Dockerfile
-!Frontend/test/
-!Frontend/web/
-!Frontend/pubspec.yaml
 
 # Python
 __pycache__/
