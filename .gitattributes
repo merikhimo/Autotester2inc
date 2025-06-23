@@ -1,4 +1,6 @@
 /frontend/build/** linguist-vendored
+frontend/build/web/** linguist-vendored
+/build/** linguist-vendored
 
 # Default behavior
 * text=auto
