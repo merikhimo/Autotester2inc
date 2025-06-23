@@ -27,7 +27,7 @@ func (h *TestsHandler) Tests(w http.ResponseWriter, req *http.Request) {
 
 	// Отправляем тот же JSON на другой API
 	resp, err := http.Post(
-		h.Config.PythonPath,
+		h.Config.PythonPath+"/run",
 		"application/json",
 		bytes.NewBuffer(body),
 	)
