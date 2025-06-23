@@ -1,6 +1,10 @@
 /frontend/build/** linguist-vendored
-frontend/build/web/** linguist-vendored
-/build/** linguist-vendored
+/frontend/build/web/** linguist-vendored
+/frontend/build/flutter_assets/** linguist-vendored
+
+# Если хочешь скрыть все *.js как сгенерированные, добавь это (осторожно!)
+*.js linguist-generated
+*.frag linguist-generated
 
 # Default behavior
 * text=auto
