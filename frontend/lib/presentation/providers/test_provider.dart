@@ -34,8 +34,4 @@ class TestProvider extends ChangeNotifier {
     testRepository.removeAllTests();
     notifyListeners();
   }
-
-  Test? getTestById(String id) {
-    return testRepository.getTestById(id);
-  }
 }

@@ -48,128 +48,126 @@ class _TestTileState extends State<TestTile> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return GestureDetector(
-      onTap: !isEditing
-          ? () {
-              _editAgain();
-              testProvider.removeTest(widget.id);
-            }
-          : null,
+      onTap: !isEditing ? _editAgain : null,
       child: Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AnimatedContainer(
-              alignment: Alignment.center,
-              width: 275,
-              height: 50,
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: isEditing
                     ? (themeProvider.isDarkTheme
-                        ? Color(0xFF303030)
-                        : Color(0xFFF5F5F5))
-                    : Color(0xFFCAE5FF),
+                        ? const Color(0xFF303030)
+                        : const Color(0xFFF5F5F5))
+                    : const Color(0xFFCAE5FF),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: isEditing
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            onSubmitted: (text) {
-                              if (_submit()) {
-                                Test test = Test(
-                                    testName: controller.text.trim(),
-                                    id: widget.id);
-                                testProvider.addTest(test);
-                              }
-                            },
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                            cursorColor: Colors.black,
-                            controller: controller,
-                            decoration: const InputDecoration(
-                              isCollapsed: true,
-                              hintText: 'Describe your test',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF898989),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12),
-                              border: InputBorder.none,
-                            ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Does ',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                  if (isEditing)
+                    SizedBox(
+                      width: 165,
+                      child: TextField(
+                        controller: controller,
+                        onSubmitted: (_) {
+                          if (_submit()) {
+                            testProvider.addTest(Test(
+                              testName: controller.text.trim(),
+                              id: widget.id,
+                            ));
+                          }
+                        },
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                          isCollapsed: true,
+                          border: InputBorder.none,
+                          hintText: "...",
+                          hintStyle: TextStyle(
+                            color: Color(0xFF898989),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: InkWell(
-                            onTap: () {
-                              if (_submit()) {
-                                Test test = Test(
-                                    testName: controller.text.trim(),
-                                    id: widget.id);
-                                testProvider.addTest(test);
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF0285FF),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     )
-                  : Text(
+                  else
+                    Text(
                       text,
-                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.blue,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () {
-                  if (isEditing == false) {
-                    testProvider.removeTest(widget.id);
-                  }
-                  widget.onDelete();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: themeProvider.isDarkTheme
-                          ? Color(0xFF898989)
-                          : Color(0xFFF5F5F5),
-                      shape: BoxShape.circle),
-                  child: Icon(
-                    Icons.close,
-                    size: 16,
-                    color: themeProvider.isDarkTheme
-                        ? Color(0xFFF5F5F5)
-                        : Color(0xFFB2B2B2),
+                  const Text(
+                    ' exist?',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                   ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () {
+                      if (_submit()) {
+                        testProvider.addTest(Test(
+                          testName: controller.text.trim(),
+                          id: widget.id,
+                        ));
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF0285FF),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {
+                if (!isEditing) {
+                  testProvider.removeTest(widget.id);
+                }
+                widget.onDelete();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: themeProvider.isDarkTheme
+                      ? const Color(0xFF898989)
+                      : const Color(0xFFF5F5F5),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: themeProvider.isDarkTheme
+                      ? const Color(0xFFF5F5F5)
+                      : const Color(0xFFB2B2B2),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
