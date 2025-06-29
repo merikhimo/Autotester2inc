@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inno_test/presentation/providers/test_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../pages/home_page.dart';
@@ -12,6 +13,7 @@ class AppbarWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final testProvider = Provider.of<TestProvider>(context);
 
     return SafeArea(
       child: Container(
@@ -37,6 +39,7 @@ class AppbarWithText extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                testProvider.removeAllTests();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomePage()),

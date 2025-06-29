@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:inno_test/presentation/widgets/info_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/theme_provider.dart';
+import '../drawer_card.dart';
+import '../info_card.dart';
+import '../overlay_card.dart';
 
 class AppBarHomePage extends StatefulWidget {
   const AppBarHomePage({super.key});
@@ -14,11 +16,50 @@ class AppBarHomePage extends StatefulWidget {
 class _AppBarHomePageState extends State<AppBarHomePage> {
   double? _lastWindowWidth;
   final GlobalKey aboutKey = GlobalKey();
+  final GlobalKey drawerKey = GlobalKey();
   OverlayEntry? aboutOverlayEntry;
 
   void _removeOverlay() {
     aboutOverlayEntry?.remove();
     aboutOverlayEntry = null;
+  }
+
+  void _showOverlay({required Offset position, required Widget content}) {
+    _removeOverlay();
+
+    final overlay = Overlay.of(context);
+
+    aboutOverlayEntry = OverlayEntry(
+      builder: (context) => OverlayCard(
+        position: position,
+        onClose: _removeOverlay,
+        child: content,
+      ),
+    );
+
+    overlay.insert(aboutOverlayEntry!);
+  }
+
+  void _toggleOverlay(GlobalKey key, Widget contentBuilder) {
+    if (aboutOverlayEntry != null) {
+      _removeOverlay();
+      return;
+    }
+
+    final RenderBox renderBox =
+        key.currentContext!.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final overlay = Overlay.of(context);
+
+    aboutOverlayEntry = OverlayEntry(
+      builder: (context) => OverlayCard(
+        position: Offset(position.dx - 170, position.dy + 40), // Сдвиг влево
+        onClose: _removeOverlay,
+        child: contentBuilder,
+      ),
+    );
+
+    overlay.insert(aboutOverlayEntry!);
   }
 
   @override
@@ -53,7 +94,7 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 50),
+                  margin: const EdgeInsets.only(right: 50),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
@@ -67,33 +108,17 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
                         final RenderBox renderBox = aboutKey.currentContext!
                             .findRenderObject() as RenderBox;
                         final position = renderBox.localToGlobal(Offset.zero);
-                        final overlay = Overlay.of(context);
 
-                        aboutOverlayEntry = OverlayEntry(
-                          builder: (context) => GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: _removeOverlay,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: position.dx,
-                                  top: position.dy + 30,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InfoCard(onClose: _removeOverlay),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        _showOverlay(
+                          position:
+                              Offset(position.dx, position.dy + 10), // было +30
+                          content: InfoCard(onClose: _removeOverlay),
                         );
-
-                        overlay.insert(aboutOverlayEntry!);
                       },
-                      child: Text(
+                      child: const Text(
                         "About",
                         style: TextStyle(
-                          color: const Color(0xFF737373),
+                          color: Color(0xFF737373),
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
                         ),
@@ -101,32 +126,36 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
+                  key: drawerKey,
                   width: 40,
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: themeProvider.isDarkTheme
-                        ? const Color(0xFFC3E0FE)
-                        : const Color(0xFFF3F3F3),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color:
-                          themeProvider.isDarkTheme ? Colors.blue : Colors.grey,
+                  child: GestureDetector(
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Icon(
+                        Icons.menu, // <-- Drawer icon
+                        size: 25,
+                        color: themeProvider.isDarkTheme
+                            ? Colors.white
+                            : Colors.black,
+                      ),
                     ),
-                  ),
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      themeProvider.isDarkTheme
-                          ? Icons.dark_mode
-                          : Icons.light_mode,
-                      size: 20,
-                      color: themeProvider.isDarkTheme
-                          ? const Color(0xFF027AFE)
-                          : const Color(0xFF7E7E7E),
-                    ),
-                    onPressed: () {
-                      themeProvider.changeTheme();
+                    onTap: () {
+                      if (aboutOverlayEntry != null) {
+                        _removeOverlay();
+                        return;
+                      }
+
+                      final RenderBox renderBox = drawerKey.currentContext!
+                          .findRenderObject() as RenderBox;
+                      final position = renderBox.localToGlobal(Offset.zero);
+
+                      _showOverlay(
+                        position: Offset(
+                            position.dx - 220, position.dy + 40), // ← было -170
+                        content: DrawerCard(onClose: _removeOverlay),
+                      );
                     },
                   ),
                 ),

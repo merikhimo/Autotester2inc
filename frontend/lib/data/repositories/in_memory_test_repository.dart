@@ -36,23 +36,13 @@ class InMemoryTestRepository extends TestRepository {
   }
 
   @override
-  Test? getTestById(String id) {
-    for (Test curTest in _tests) {
-      if (curTest.id == id) return curTest;
-    }
-    return null;
-  }
-
-  @override
   void addTest(Test test) {
     _tests.add(test);
   }
 
   @override
   void removeTest(String id) {
-    for (Test curTest in _tests) {
-      if (curTest.id == id) _tests.remove(curTest);
-    }
+    _tests.removeWhere((test) => test.id == id);
   }
 
   @override
