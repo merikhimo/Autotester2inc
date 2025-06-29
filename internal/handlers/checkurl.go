@@ -15,11 +15,13 @@ type SiteChecker interface {
 	CheckSite(url string) bool
 }
 
+// CheckUrlHandler handles /api/checkurl requests.
 type CheckUrlHandler struct {
 	*configs.Config
 	SiteChecker SiteChecker
 }
 
+// NewCheckUrlHandler returns a new CheckUrlHandler.
 func NewCheckUrlHandler(config *configs.Config) *CheckUrlHandler {
 	return &CheckUrlHandler{
 		Config:      config,
@@ -27,6 +29,7 @@ func NewCheckUrlHandler(config *configs.Config) *CheckUrlHandler {
 	}
 }
 
+// Check handles the /api/checkurl endpoint.
 func (h *CheckUrlHandler) Check(w http.ResponseWriter, req *http.Request) {
 	var payload domain.UrlRequest
 	body, err := io.ReadAll(req.Body)
@@ -57,5 +60,4 @@ func (h *CheckUrlHandler) Check(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 	res.JSONResponce(w, resp, http.StatusOK)
-	return
 }

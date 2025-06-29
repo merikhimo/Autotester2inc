@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Config holds application configuration.
 type Config struct {
 	Rights      string
 	Timeout     time.Duration
@@ -16,6 +17,7 @@ type Config struct {
 	FrontendURL string
 }
 
+// LoadConfig loads configuration from environment.
 func LoadConfig() *Config {
 	err := godotenv.Load(".env")
 	if err != nil {

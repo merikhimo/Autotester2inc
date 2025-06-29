@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
+// CORS is a middleware that sets CORS headers for allowed origins.
 func CORS(next http.Handler) http.Handler {
 	allowedOrigins := map[string]bool{
 		"http://python-api:3000": true,
@@ -19,7 +20,7 @@ func CORS(next http.Handler) http.Handler {
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
 		}
 
-		// Если preflight-запрос (OPTIONS), сразу отвечаем
+		// If preflight request (OPTIONS), respond immediately
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return

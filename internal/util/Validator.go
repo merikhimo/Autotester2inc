@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// ValidateUrl validates the given URL string pointer.
 func ValidateUrl(link *string) error {
 	if link == nil || *link == "" {
 		return errors.New("url cannot be empty")
@@ -22,5 +23,3 @@ func ValidateUrl(link *string) error {
 	}
 	return nil
 }
-
-//Написать проверку, существует ли сайт
