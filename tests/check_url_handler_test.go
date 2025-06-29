@@ -68,7 +68,7 @@ func TestCheck_Success(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d", w.Code)
 	}
-	// Проверка куки
+	
 	found := false
 	for _, c := range w.Result().Cookies() {
 		if c.Name == "instructions_shown" && c.Value == "true" {
@@ -78,7 +78,7 @@ func TestCheck_Success(t *testing.T) {
 	if !found {
 		t.Error("expected cookie 'instructions_shown=true' to be set")
 	}
-	// Проверка тела ответа
+	
 	var resp map[string]interface{}
 	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
 		t.Error("invalid json in response")
