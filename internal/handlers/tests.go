@@ -8,20 +8,22 @@ import (
 	"net/http"
 )
 
+// TestsHandler handles /api/tests requests.
 type TestsHandler struct {
 	*configs.Config
 	PostFunc func(url, contentType string, body io.Reader) (*http.Response, error)
 }
 
+// NewTestsHandler returns a new TestsHandler.
 func NewTestsHandler(config *configs.Config) *TestsHandler {
 	return &TestsHandler{
 		Config:   config,
-		PostFunc: http.Post, // по умолчанию стандартная функция
+		PostFunc: http.Post, // default function
 	}
 }
 
+// Tests handles the /api/tests endpoint.
 func (h *TestsHandler) Tests(w http.ResponseWriter, req *http.Request) {
-	// Читаем тело входящего запроса
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
 		res.ErrorResponce(w, "Failed to read request body: "+err.Error(), http.StatusBadRequest)
@@ -29,7 +31,6 @@ func (h *TestsHandler) Tests(w http.ResponseWriter, req *http.Request) {
 	}
 	defer req.Body.Close()
 
-	// Отправляем тот же JSON на другой API
 	resp, err := h.PostFunc(
 		h.Config.PythonPath+"/run",
 		"application/json",

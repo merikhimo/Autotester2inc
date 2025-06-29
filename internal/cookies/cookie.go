@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// SetCookieHandler sets a cookie.
 func SetCookieHandler(w http.ResponseWriter, name, value string, maxAge int) {
 	cookie := &http.Cookie{
 		Name:     name,
@@ -16,6 +17,8 @@ func SetCookieHandler(w http.ResponseWriter, name, value string, maxAge int) {
 	}
 	http.SetCookie(w, cookie)
 }
+
+// GetCookie gets a cookie by name.
 func GetCookie(r *http.Request, name string) (*http.Cookie, error) {
 	cookie, err := r.Cookie(name)
 	if err != nil {

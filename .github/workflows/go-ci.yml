@@ -24,12 +24,12 @@ jobs:
         run: go mod tidy
 
       # ------ LINT ------
-      # - name: Install golangci-lint
-      #   uses: golangci/golangci-lint-action@v6
-      #   with:
-      #     version: latest
-      #     args: --timeout=5m
-
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --timeout=5m
+          
       # ------ BUILD ------
       - name: Build the project
         run: go build -v ./...

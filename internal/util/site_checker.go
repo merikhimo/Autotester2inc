@@ -6,19 +6,23 @@ import (
 	"time"
 )
 
+// AvailabilityClient checks site availability.
 type AvailabilityClient struct {
 	client *http.Client
 }
 
+// NewAvailabilityClient returns a new AvailabilityClient with timeout.
 func NewAvailabilityClient(timeout time.Duration) *AvailabilityClient {
 	return &AvailabilityClient{
 		client: &http.Client{
-			Timeout: timeout},
+			Timeout: timeout,
+		},
 	}
 }
 
+// CheckSite checks if the site is available.
 func (ac *AvailabilityClient) CheckSite(url string) bool {
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("Error creating request for %s: %v", url, err)
 		return false
@@ -30,11 +34,10 @@ func (ac *AvailabilityClient) CheckSite(url string) bool {
 		return false
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode >= 200 && resp.StatusCode < 400 {
+	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusBadRequest {
 		log.Printf("Site %s is available", url)
 		return true
-	} else {
-		log.Printf("Site %s returned status code %d", url, resp.StatusCode)
-		return false
 	}
+	log.Printf("Site %s returned status code %d", url, resp.StatusCode)
+	return false
 }
