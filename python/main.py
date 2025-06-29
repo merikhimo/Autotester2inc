@@ -139,10 +139,7 @@ def run_tests(data: InputData):
 
     return APIResponse(
         status="success",
-        data={
-            "url": data.url,
-            "results": results
-        }
+        data=results
     )
 
 if __name__ == "__main__":
