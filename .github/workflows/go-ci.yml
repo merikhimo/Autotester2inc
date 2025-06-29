@@ -1,40 +1,41 @@
-name: Go CI
+name: Go CI Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [main,go-backend]
   pull_request:
-    branches: [ master ]
+    branches: [main]
 
 jobs:
-  build:
-
+  lint-build-test:
+    name: Lint, Build, and Test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: 1.24.4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
 
-    - name: Cache Go modules
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+      - name: Install dependencies
+        run: go mod tidy
 
-    - name: Install dependencies
-      run: go mod download
+      # ------ LINT ------
+      # - name: Install golangci-lint
+      #   uses: golangci/golangci-lint-action@v6
+      #   with:
+      #     version: latest
+      #     args: --timeout=5m
 
-    - name: Build project
-      run: go build ./...
+      # ------ BUILD ------
+      - name: Build the project
+        run: go build -v ./...
 
-    - name: Run tests
-      run: go test ./... -v
+      # ------ UNIT TESTS ------
+      - name: Run unit and integration tests with coverage
+        run: |
+          mkdir -p coverage
+          go test -v -coverprofile=coverage/coverage.out ./...
