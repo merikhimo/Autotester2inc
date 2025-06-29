@@ -29,7 +29,7 @@ func setupRouterWithMockChecker() *http.ServeMux {
 	// /api/tests
 	testsHandler := handlers.NewTestsHandler(cfg)
 	testsHandler.PostFunc = func(url, contentType string, body io.Reader) (*http.Response, error) {
-		// Возвращаем успешный фейковый ответ
+		
 		return &http.Response{
 			StatusCode: 200,
 			Body:       io.NopCloser(bytes.NewBufferString(`{"status":"ok"}`)),
