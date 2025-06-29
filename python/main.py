@@ -11,8 +11,9 @@ from openai import OpenAI
 import os
 import language_tool_python
 
-API_KEY = "sk-0M12tbkrnKubF86nHyKPKidkqoqfNzei"
-BASE_URL =  "https://api.proxyapi.ru/openai/v1"
+# --- API client setup ---
+API_KEY = os.getenv("OPENAI_API_KEY", "sk-0M12tbkrnKubF86nHyKPKidkqoqfNzei")
+BASE_URL = "https://api.proxyapi.ru/openai/v1"
 
 client = OpenAI(
     api_key=API_KEY,
@@ -26,6 +27,7 @@ def ask_ai(prompt: str) -> str:
     )
     return chat_completion.choices[0].message.content.strip()
 
+# --- Data models (reverted to original format) ---
 class APIResponse(BaseModel):
     status: str
     data: Optional[Any] = None
@@ -33,24 +35,24 @@ class APIResponse(BaseModel):
 
 class InputData(BaseModel):
     url: str
-    page_type: str
     tests: List[str]
 
 app = FastAPI()
 
-def generate_additional_tests(page_type: str, existing: List[str]) -> List[str]:
-    prompt = (
-        f"Для страницы типа '{page_type}' предложи дополнительные критерии проверки сайта. "
-        f"Уже есть: {existing}. Верни JSON-массив строк без пояснений."
-    )
-    response = ask_ai(prompt)
-    try:
-        suggestions = json.loads(response)
-        if isinstance(suggestions, list):
-            return [s for s in suggestions if s not in existing]
-    except Exception:
-        pass
-    return []
+# --- Commented out: additional test generation ---
+# def generate_additional_tests(page_type: str, existing: List[str]) -> List[str]:
+#     prompt = (
+#         f"Для страницы типа '{page_type}' предложи дополнительные критерии проверки сайта. "
+#         f"Уже есть: {existing}. Верни JSON-массив строк без пояснений."
+#     )
+#     response = ask_ai(prompt)
+#     try:
+#         suggestions = json.loads(response)
+#         if isinstance(suggestions, list):
+#             return [s for s in suggestions if s not in existing]
+#     except Exception:
+#         pass
+#     return []
 
 class WebTestRunner:
     def __init__(self, start_url: str):
@@ -71,7 +73,6 @@ class WebTestRunner:
         if "login" in c:
             return bool(soup.find("input", {"type": "password"}))
         if "submit" in c or "button" in c or "клик" in c:
-            # проверка на кликабельность: наличие href или onclick
             el = soup.find(lambda tag: (tag.name == 'a' and tag.has_attr('href')) or tag.has_attr('onclick') or tag.name=='button')
             return bool(el)
         if "header" in c and "welcome" in c:
@@ -82,7 +83,7 @@ class WebTestRunner:
         text = soup.get_text(separator=' ', strip=True)
         matches = self.spell_tool.check(text)
         errors = []
-        for m in matches[:5]:  # ограничимся первыми 5 ошибками
+        for m in matches[:5]:
             errors.append({
                 'text': text[m.offset:m.offset+m.errorLength],
                 'suggestions': m.replacements
@@ -104,7 +105,7 @@ class WebTestRunner:
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, 'lxml')
         results: List[Any] = []
-        # проверяем каждый критерий
+        # Проверяем каждый критерий
         for criterion in tests:
             result = self.check_with_rules(soup, criterion)
             if result is None:
@@ -113,7 +114,7 @@ class WebTestRunner:
                 answer = ask_ai(question).lower()
                 result = answer.startswith("yes")
             results.append({"test": criterion, "result": result})
-        # орфография
+        # Орфография
         spell_report = self.check_spelling(soup)
         results.append({"test": "spelling_check", "result": spell_report['ok'], "details": spell_report})
         return results
@@ -122,10 +123,8 @@ class WebTestRunner:
 def run_tests(data: InputData):
     runner = WebTestRunner(data.url)
     try:
-        # генерируем дополнительные тесты
-        additions = generate_additional_tests(data.page_type, data.tests)
-        all_tests = data.tests + additions
-        results = runner.check_page(data.url, all_tests)
+        # Генерировать дополнительные тесты закомментировано, используем только переданные data.tests
+        results = runner.check_page(data.url, data.tests)
     except Exception as e:
         return APIResponse(status="error", error=str(e))
 
