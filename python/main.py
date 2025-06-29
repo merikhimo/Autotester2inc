@@ -114,7 +114,7 @@ class WebTestRunner:
             results.append({"test": criterion, "result": result})
         # Орфография
         spell_report = self.check_spelling(soup)
-        results.append({"test": "spelling_check", "result": spell_report['ok'], "details": spell_report})
+        results.append({"test": "spelling_check", "result": spell_report['ok']})
         return results
 
 @app.post("/run", response_model=APIResponse)
