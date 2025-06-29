@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"Autotester/configs"
+	"Autotester/internal/cookies"
 	"Autotester/internal/domain"
 	"Autotester/internal/util"
 	"Autotester/pkg/res"
@@ -10,12 +11,20 @@ import (
 	"net/http"
 )
 
+type SiteChecker interface {
+	CheckSite(url string) bool
+}
+
 type CheckUrlHandler struct {
 	*configs.Config
+	SiteChecker SiteChecker
 }
 
 func NewCheckUrlHandler(config *configs.Config) *CheckUrlHandler {
-	return &CheckUrlHandler{Config: config}
+	return &CheckUrlHandler{
+		Config:      config,
+		SiteChecker: util.NewAvailabilityClient(config.Timeout),
+	}
 }
 
 func (h *CheckUrlHandler) Check(w http.ResponseWriter, req *http.Request) {
@@ -35,10 +44,11 @@ func (h *CheckUrlHandler) Check(w http.ResponseWriter, req *http.Request) {
 		res.ErrorResponce(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if _, err := util.NewAvailabilityClient(h.Config.Timeout).CheckSite(payload.Url); err != nil {
-		res.ErrorResponce(w, "Site is not available or returned an invalid status code: "+err.Error(), http.StatusBadRequest)
+	if !h.SiteChecker.CheckSite(payload.Url) {
+		res.ErrorResponce(w, "Site is not available", http.StatusBadRequest)
 		return
 	}
+	cookies.SetCookieHandler(w, "instructions_shown", "true", 60*60*24*7)
 	resp := domain.APIResponse{
 		Status: "success",
 		Data: map[string]interface{}{

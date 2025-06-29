@@ -10,10 +10,14 @@ import (
 
 type TestsHandler struct {
 	*configs.Config
+	PostFunc func(url, contentType string, body io.Reader) (*http.Response, error)
 }
 
 func NewTestsHandler(config *configs.Config) *TestsHandler {
-	return &TestsHandler{Config: config}
+	return &TestsHandler{
+		Config:   config,
+		PostFunc: http.Post, // по умолчанию стандартная функция
+	}
 }
 
 func (h *TestsHandler) Tests(w http.ResponseWriter, req *http.Request) {
@@ -26,7 +30,7 @@ func (h *TestsHandler) Tests(w http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 
 	// Отправляем тот же JSON на другой API
-	resp, err := http.Post(
+	resp, err := h.PostFunc(
 		h.Config.PythonPath+"/run",
 		"application/json",
 		bytes.NewBuffer(body),
