@@ -31,7 +31,6 @@ def ask_ai(prompt: str) -> str:
 class APIResponse(BaseModel):
     status: str
     data: Optional[Any] = None
-    error: Optional[str] = None
 
 class InputData(BaseModel):
     url: str
@@ -126,7 +125,7 @@ def run_tests(data: InputData):
         # Генерировать дополнительные тесты закомментировано, используем только переданные data.tests
         results = runner.check_page(data.url, data.tests)
     except Exception as e:
-        return APIResponse(status="error", error=str(e))
+        return APIResponse(status="error")
 
     try:
         post_resp = requests.post(
