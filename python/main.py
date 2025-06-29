@@ -29,7 +29,6 @@ def ask_ai(prompt: str) -> str:
 
 # --- Data models (reverted to original format) ---
 class APIResponse(BaseModel):
-    status: str
     data: Optional[Any] = None
 
 class InputData(BaseModel):
@@ -138,7 +137,6 @@ def run_tests(data: InputData):
         return APIResponse(status="error", error=f"Failed to send results: {e}")
 
     return APIResponse(
-        status="success",
         data=results
     )
 
