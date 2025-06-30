@@ -28,9 +28,7 @@ def ask_ai(prompt: str) -> str:
     return chat_completion.choices[0].message.content.strip()
 
 class APIResponse(BaseModel):
-    status: str
     data: Optional[Any] = None
-    error: Optional[str] = None
 
 
 class InputData(BaseModel):
@@ -115,11 +113,7 @@ def run_tests(data: InputData):
     print(go_payload)
     # Возвращаем ответ в формате FastAPI
     return APIResponse(
-        status="success",
-        data={
-            "url": data.url,
-            "results": go_payload
-        }
+        data=go_payload,
     )
 
 
