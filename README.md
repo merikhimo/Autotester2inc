@@ -156,7 +156,7 @@ internal/
 ### Static view
 https://miro.com/app/board/uXjVIghvg_g=/?share_link_id=709888351142
 ### Dynamic view
-### 📊 Sequence Diagram
+###  Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -180,10 +180,8 @@ sequenceDiagram
 ```
 
 ### Deployment view
-### 🗺️ Deployment View (Mermaid Diagram)
-
 ```mermaid
-graph TD
+flowchart TD
     subgraph User_Device
         browser[Frontend (Browser)]
     end
