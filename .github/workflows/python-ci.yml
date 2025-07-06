@@ -1,0 +1,28 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main, dev ]  # Триггер на пуш в main или dev
+  pull_request:
+    branches: [ main ]      # Триггер на PR в main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest   # ОС для тестов
+
+    steps:
+      - uses: actions/checkout@v4  # Клонирует репозиторий
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"  # Версия Python (измените на нужную)
+
+      - name: Install dependencies
+        run: |
+          pip install pytest  # Установка pytest (если ещё нет)
+          cd python && pip install -e .  # Если есть setup.py или зависимости
+
+      - name: Run tests
+        run: |
+          cd python && pytest test_1.py -v  # Запуск тестов
