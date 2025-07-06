@@ -1,15 +1,12 @@
-import sys
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-import json
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Any, Optional, Dict
-from huggingface_hub import InferenceClient
+from typing import List, Any, Optional
 from openai import OpenAI
 import os
-import language_tool_python
+import logging
+
 
 # --- API client setup ---
 API_KEY = os.getenv("OPENAI_API_KEY", "sk-0M12tbkrnKubF86nHyKPKidkqoqfNzei")
@@ -78,8 +75,9 @@ class WebTestRunner:
             if result is None:
                 excerpt = self.narrow_relevant_html(soup).get_text(" ", strip=True)[:1000]
                 question = f"Yes or No: {criterion}? Context: {excerpt}"
-                answer = ask_ai(question).strip().lower()
-                result = answer.startswith("yes")
+                answer = ask_ai(question).lower()
+                logging.log(level=logging.INFO, msg=answer)
+                result = answer.startswith("yes") or 'yes' in answer
             results.append(result)
         return results
 
