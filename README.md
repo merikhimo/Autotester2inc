@@ -106,8 +106,19 @@ Golang CI:
 
 ## Architecture
 
-<pre lang="markdown"> ### 📦 Project Structure ```text Project is built using clean separation of concerns internal/ ├── cookies/ # Cookie management utilities ├── domain/ # Shared DTOs and structs (UrlRequest, APIResponse, Result) ├── handlers/ # HTTP API handlers for /checkurl, /tests, /results ├── middleware/ # CORS, logging, panic recovery ├── routes/ # Router setup ├── util/ # URL validation and site availability checks ``` </pre>
+### Project Structure (backend)
 
+Project is built using clean separation of concerns:
+
+```text
+internal/
+├── cookies/      # Cookie management utilities
+├── domain/       # Shared DTOs and structs (UrlRequest, APIResponse, Result)
+├── handlers/     # HTTP API handlers for /checkurl, /tests, /results
+├── middleware/   # CORS, logging, panic recovery
+├── routes/       # Router setup
+├── util/         # URL validation and site availability checks
+```
 ### Request Flow
 
 #### 1. POST /api/checkurl
