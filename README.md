@@ -156,6 +156,8 @@ internal/
 ### Static view
 https://miro.com/app/board/uXjVIghvg_g=/?share_link_id=709888351142
 ### Dynamic view
+### 📊 Sequence Diagram
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -181,11 +183,11 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    subgraph User Device
+    subgraph User_Device
         browser[Frontend (Browser)]
     end
 
-    subgraph Server (Docker Host)
+    subgraph Docker_Host
         router[Go API Router]
         checkHandler[CheckUrl Handler]
         testHandler[Tests Handler]
@@ -193,13 +195,13 @@ graph TD
         cookie[Cookie Store]
     end
 
-    subgraph External Services
+    subgraph External_Services
         pythonAPI[Python Test Service (/run)]
         targetSite[Site to be Tested]
         llm[LLM / AI Module]
     end
 
-    subgraph Pages
+    subgraph UI_Pages
         mainPage[Main Page (UI)]
         resultPage[Result Page (UI)]
     end
