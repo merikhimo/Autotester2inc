@@ -177,6 +177,7 @@ sequenceDiagram
 
     Frontend->>Go_API: POST /api/results [test results]
     Go_API->>Frontend: 200 OK with wrapped results
+```
 
 ### Deployment view
 ### 🗺️ Deployment View (Mermaid Diagram)
@@ -220,5 +221,4 @@ graph TD
     browser --> resultPage
     resultPage -->|POST /api/results| router
     router --> resultsHandler
-
-
+```
