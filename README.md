@@ -1,1 +1,103 @@
+# Inno Test
 
+## Development
+
+### Kanban board
+
+We use a GitLab Issue Board with the following columns:
+
+- To Do  
+  _Entry criteria:_
+    - Issue is estimated
+    - Issue uses the defined template
+    - Label To Do is applied
+
+- In Progress  
+  _Entry criteria:_
+    - A new branch is created for the issue
+    - Assigned to a team member
+
+- In Review  
+  _Entry criteria:_
+    - Merge request is created
+    - Reviewer is assigned
+
+- Ready to deploy  
+  _Entry criteria:_
+    - Review is complete
+    - MR is approved
+
+- User Testing  
+  _Entry criteria:_
+    - Feature is deployed to staging
+    - Customer is informed and test scenario is ready
+
+- Done  
+  _Entry criteria:_
+    - All acceptance criteria are met
+    - Feedback (if any) is resolved
+    - Issue is closed
+
+### Git workflow
+
+Each developer created custom CI Pipeline files in the .github/workflows directory.
+More details in "Build and deployment" section
+
+We follow a simplified GitHub Flow.
+- All development is done on other branches from `main`.
+- Branches are named according to developer tasks
+
+**Issue templates**: We use templates for:
+- User Story
+- Bug Report
+- Technical Task
+
+  TODO: IMPLEMENT TEMPLATES AND ADD A LINK TO THEM HERE
+
+**Commit format**:  
+Each developer describes what have he done in the commit
+
+**Pull Requests**:
+https://github.com/cQu1x/Autotester/pulls?q=is%3Apr+is%3Aclosed
+
+**Code review**:
+Each pull request must be reviewed by at least one other team member before merging.
+
+**Git workflow diagram**
+
+TODO: IMPLEMENT GITGRAPH DIAGRAM
+
+## Quality assurance
+
+### Quality attribute scenarios
+
+See
+```
+docs/quality-assurance/quality-attribute-scenarios.md
+```
+
+
+### Automated tests
+
+Flutter:
+- Used in-build flutter tools for testing
+- Implemented unit-tests for widgets
+- `frontend/test` contains all tests
+
+## Build and deployment
+
+### Continuous integration
+
+Flutter CI:
+- Link to CI: https://github.com/cQu1x/Autotester/blob/main/.github/workflows/flutter_ci.yml
+- Downloads flutter
+- Runs tests
+- Creates build for web application (important for code updates)
+
+## Architecture
+
+### Static view
+
+### Dynamic view
+
+### Deployment view
