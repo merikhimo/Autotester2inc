@@ -180,10 +180,12 @@ sequenceDiagram
 ```
 
 ### Deployment view
+
+
 ```mermaid
 flowchart TD
     subgraph User_Device
-        browser[Frontend (Browser)]
+        browser[Frontend Browser]
     end
 
     subgraph Docker_Host
@@ -195,14 +197,14 @@ flowchart TD
     end
 
     subgraph External_Services
-        pythonAPI[Python Test Service (/run)]
+        pythonAPI[Python Test Service /run]
         targetSite[Site to be Tested]
-        llm[LLM / AI Module]
+        llm[LLM or AI Module]
     end
 
     subgraph UI_Pages
-        mainPage[Main Page (UI)]
-        resultPage[Result Page (UI)]
+        mainPage[Main Page UI]
+        resultPage[Result Page UI]
     end
 
     browser --> mainPage
