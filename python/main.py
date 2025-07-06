@@ -46,7 +46,7 @@ class WebTestRunner:
         self.current_html = ""
 
     def fetch_page(self, url: str) -> str:
-        resp = self.session.get(url)
+        resp = self.session.get(url, params={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"})
         resp.raise_for_status()
         self.current_url = resp.url
         self.current_html = resp.text
