@@ -104,6 +104,18 @@ Golang CI:
  - Downloads Golang
  - Runs tests and linting
 
+Python:
+ - Used python libraries (pytest) for testing
+ - Implemented tests for parser and LLM-connection
+ - `/test_1.py` contains all tests
+
+Python CI:
+ - Link to CI: https://github.com/cQu1x/Autotester/actions/workflows/python-ci.yml
+ - Downloads Python
+ - Runs tests
+
+
+
 ## Architecture
 
 ### Project Structure (backend)
