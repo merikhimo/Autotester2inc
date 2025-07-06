@@ -137,7 +137,10 @@ class _SmartInputTileState extends State<SmartInputTile> {
                             onSubmitted: (_) {
                               if (_submit()) {
                                 testProvider.addTest(Test(
-                                  testName: _controller.text.trim(),
+                                  testName: widget.type ==
+                                          TestVariantType.existence
+                                      ? "Does ${_controller.text.trim()} exist?"
+                                      : "Is ${_controller.text.trim()} clickable?",
                                   id: widget.id,
                                 ));
                               }
@@ -156,7 +159,10 @@ class _SmartInputTileState extends State<SmartInputTile> {
                           onTap: () {
                             if (_submit()) {
                               testProvider.addTest(Test(
-                                testName: _controller.text.trim(),
+                                testName: widget.type ==
+                                        TestVariantType.existence
+                                    ? "Does ${_controller.text.trim()} exist?"
+                                    : "Is ${_controller.text.trim()} clickable?",
                                 id: widget.id,
                               ));
                             }

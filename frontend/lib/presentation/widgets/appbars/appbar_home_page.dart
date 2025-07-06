@@ -40,28 +40,6 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
     overlay.insert(aboutOverlayEntry!);
   }
 
-  void _toggleOverlay(GlobalKey key, Widget contentBuilder) {
-    if (aboutOverlayEntry != null) {
-      _removeOverlay();
-      return;
-    }
-
-    final RenderBox renderBox =
-        key.currentContext!.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-    final overlay = Overlay.of(context);
-
-    aboutOverlayEntry = OverlayEntry(
-      builder: (context) => OverlayCard(
-        position: Offset(position.dx - 170, position.dy + 40), // Сдвиг влево
-        onClose: _removeOverlay,
-        child: contentBuilder,
-      ),
-    );
-
-    overlay.insert(aboutOverlayEntry!);
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
