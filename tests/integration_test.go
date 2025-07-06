@@ -102,3 +102,16 @@ func TestIntegration_CheckUrl_SetsCookie(t *testing.T) {
 		t.Error("expected cookie 'instructions_shown=true' to be set")
 	}
 }
+
+func TestIntegration_CheckUrl_ResponseBody(t *testing.T) {
+	router := setupRouterWithMockChecker()
+	payload := `{"url": "https://example.com"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/checkurl", bytes.NewBufferString(payload))
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	body := w.Body.String()
+	if !(bytes.Contains([]byte(body), []byte(`"ready_for_tests":true`))) {
+		t.Error("expected response body to contain 'ready_for_tests': true")
+	}
+}
