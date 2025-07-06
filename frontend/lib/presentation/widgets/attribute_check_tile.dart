@@ -22,7 +22,7 @@ class _AttributeCheckTileState extends State<AttributeCheckTile> {
 
   bool isEditing = true;
   String submittedText = '';
-  double _containerWidth = 350;
+  final double _containerWidth = 350;
 
   bool _submit() {
     final type = _typeController.text.trim();

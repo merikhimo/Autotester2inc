@@ -5,7 +5,6 @@ import 'package:inno_test/presentation/widgets/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/test_provider.dart';
-import '../providers/theme_provider.dart';
 
 class LoadingPage extends StatefulWidget {
   final String url;
@@ -45,8 +44,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(100), child: AppbarEmpty()),

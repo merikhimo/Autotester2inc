@@ -25,7 +25,7 @@ class TestDiagram extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildProgressBar('${successTest} tests complete',
+                  _buildProgressBar('$successTest tests complete',
                       Color(0xFF4AD968), successTest / overallTest),
                   const SizedBox(height: 12),
                   _buildProgressBar(

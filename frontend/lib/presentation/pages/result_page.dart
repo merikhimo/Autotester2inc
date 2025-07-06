@@ -12,10 +12,10 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final testProvider = Provider.of<TestProvider>(context);
-    final _results = testProvider.results;
+    final results = testProvider.results;
     int successTests = 0;
 
-    for (TestResult tr in _results) {
+    for (TestResult tr in results) {
       if (tr.result == true) {
         successTests++;
       }
@@ -46,7 +46,7 @@ class ResultPage extends StatelessWidget {
                 height: 20,
               ),
               TestDiagram(
-                overallTest: _results.length,
+                overallTest: results.length,
                 successTest: successTests,
               ),
               SizedBox(
@@ -58,9 +58,9 @@ class ResultPage extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: _results.length,
+                  itemCount: results.length,
                   itemBuilder: (_, index) {
-                    final r = _results[index];
+                    final r = results[index];
                     final bool isSuccess = r.result == true;
 
                     return Container(
