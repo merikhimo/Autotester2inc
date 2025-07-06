@@ -1,38 +1,43 @@
 package util
 
 import (
-	"context"
-	"errors"
+	"log"
 	"net/http"
 	"time"
 )
 
+// AvailabilityClient checks site availability.
 type AvailabilityClient struct {
 	client *http.Client
 }
 
+// NewAvailabilityClient returns a new AvailabilityClient with timeout.
 func NewAvailabilityClient(timeout time.Duration) *AvailabilityClient {
 	return &AvailabilityClient{
 		client: &http.Client{
-			Timeout: timeout},
+			Timeout: timeout,
+		},
 	}
 }
 
-func (Client *AvailabilityClient) CheckSite(url string) (int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), Client.client.Timeout)
-	defer cancel()
-	// Используем HEAD запрос для проверки доступности
-	req, err := http.NewRequestWithContext(ctx, "HEAD", url, nil)
+// CheckSite checks if the site is available.
+func (ac *AvailabilityClient) CheckSite(url string) bool {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return 0, err
+		log.Printf("Error creating request for %s: %v", url, err)
+		return false
 	}
-	resp, err := Client.client.Do(req)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+	resp, err := ac.client.Do(req)
 	if err != nil {
-		return 0, err
+		log.Printf("Error checking site %s: %v", url, err)
+		return false
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
-		return 0, errors.New("invalid status code")
+	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusBadRequest {
+		log.Printf("Site %s is available", url)
+		return true
 	}
-	return resp.StatusCode, nil
+	log.Printf("Site %s returned status code %d", url, resp.StatusCode)
+	return false
 }

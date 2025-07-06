@@ -1,38 +1,39 @@
+import sys
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Dict
+from huggingface_hub import InferenceClient
+from openai import OpenAI
+import os
+import language_tool_python
 
-HF_TOKEN = "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"
+# --- API client setup ---
+API_KEY = os.getenv("OPENAI_API_KEY", "sk-0M12tbkrnKubF86nHyKPKidkqoqfNzei")
+BASE_URL = "https://api.proxyapi.ru/openai/v1"
 
+client = OpenAI(
+    api_key=API_KEY,
+    base_url=BASE_URL
+)
 
 def ask_ai(prompt: str) -> str:
-    from huggingface_hub import InferenceClient
-
-    client = InferenceClient(
-        provider="hf-inference",
-        token=HF_TOKEN
-    )
-
-    response = client.chat_completion(
-        model="microsoft/phi-4",
+    chat_completion = client.chat.completions.create(
+        model="gpt-4.1-2025-04-14",
         messages=[{"role": "user", "content": prompt}]
     )
-    return response.choices[0].message.content.strip()
-
+    return chat_completion.choices[0].message.content.strip()
 
 class APIResponse(BaseModel):
-    status: str
     data: Optional[Any] = None
-    error: Optional[str] = None
 
 
 class InputData(BaseModel):
-    link: str
-    criterias: List[str]
+    url: str
+    tests: List[str]
 
 
 app = FastAPI()
@@ -45,7 +46,7 @@ class WebTestRunner:
         self.current_html = ""
 
     def fetch_page(self, url: str) -> str:
-        resp = self.session.get(url)
+        resp = self.session.get(url, params={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"})
         resp.raise_for_status()
         self.current_url = resp.url
         self.current_html = resp.text
@@ -67,8 +68,8 @@ class WebTestRunner:
             return soup
         return max(candidates, key=lambda tag: len(tag.get_text(strip=True)))
 
-    def check_page(self, link: str, prompts: List[str]) -> List[bool]:
-        resp = self.session.get(link)
+    def check_page(self, url: str, prompts: List[str]) -> List[bool]:
+        resp = self.session.get(url)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, 'lxml')
         results: List[bool] = []
@@ -85,32 +86,39 @@ class WebTestRunner:
 
 @app.post("/run", response_model=APIResponse)
 def run_tests(data: InputData):
-    runner = WebTestRunner(data.link)
+    runner = WebTestRunner(data.url)
     try:
-        results = runner.check_page(data.link, data.criterias)
+        results = runner.check_page(data.url, data.tests)
     except Exception as e:
         return APIResponse(status="error", error=str(e))
 
-    response = [{'test': data.criterias[i], 'result': results[i]} for i in range(len(data.criterias))]
+    # Формируем данные в формате, который ожидает Go-сервер
+    go_payload = [
+        {"test": test, "result": result}
+        for test, result in zip(data.tests, results)
+    ]
 
-    # Prepare payload to send to Go API
-    payload = {
-        "criterias": data.criterias,
-        "results": response
-    }
     try:
+        # Отправляем данные в Go-сервис
         post_resp = requests.post(
             "http://go-api:8081/api/results",
-            json=payload,
+            json=go_payload,  # Отправляем массив объектов напрямую
             timeout=5
         )
         post_resp.raise_for_status()
     except Exception as e:
         return APIResponse(status="error", error=f"Failed to send results: {e}")
 
-    return APIResponse(status="success", data=payload)
+
+    print(go_payload)
+    # Возвращаем ответ в формате FastAPI
+    return APIResponse(
+        data=go_payload,
+    )
 
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=3000)
+
+    # print(ask_ai("Как у тебя дела?"))
