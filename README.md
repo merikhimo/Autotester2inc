@@ -17,24 +17,25 @@ The goal of the project is to create a simple and accessible tool for checking w
 
 ## Roadmap
 
-### ✅ MVP-0
-- Interface Layout (Figma)  
-- User scenario elaboration  
-- Without working logic  
+- [x] **MVP-0**
+  - [x] Interface Layout (Figma)  
+  - [x] User scenario elaboration  
+  - [x] Without working logic  
 
-### ✅ MVP-1
-- Front-to-back communication  
-- DOM parsing and checking by conditions  
-- Adding test steps (+)  
-- Entering URLs and conditions  
+- [x] **MVP-1**
+  - [x] Front-to-back communication  
+  - [x] DOM parsing and checking by conditions  
+  - [x] Adding test steps (+)  
+  - [x] Entering URLs and conditions  
 
-### 🔵 MVP-2
-- Templates for tests  
-- Generating conditions through **AI**
+- [ ] **MVP-2**
+  - [ ] Templates for tests  
+  - [ ] Generating conditions through **AI**
 
-### 🔜 MVP-3
-- Export results in PDF format  
-- UI/UX testing with users
+- [ ] **MVP-3**
+  - [ ] Export results in PDF format  
+  - [ ] UI/UX testing with users
+
 
 ### Kanban board
 
