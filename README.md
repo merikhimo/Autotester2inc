@@ -1,7 +1,5 @@
 # Inno Test
 ![Logo](./Assests/logo.jpg)
-### MIT Licence:
-https://github.com/cQu1x/Autotester/blob/main/LICENSE
 
 ### One line description
 Automatically check websites using custom test cases — simple, fast, and without programming skills.
@@ -154,3 +152,5 @@ Python CI:
 Link to architecutre README:
 https://github.com/cQu1x/Autotester/tree/main/internal
 
+### MIT Licence:
+https://github.com/cQu1x/Autotester/blob/main/LICENSE
