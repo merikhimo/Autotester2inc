@@ -1,5 +1,20 @@
 # Inno Test
 
+### MIT Licence:
+https://github.com/cQu1x/Autotester/blob/main/LICENSE
+
+### One line description
+Automatically check websites using custom test cases — simple, fast, and without programming skills.
+
+### Link to the Demo Video
+https://drive.google.com/file/d/1QEE76XP4mnRaU0ynXxHeObb-Hm-ILD3P/view?usp=sharing
+
+### Link to product
+http://31.129.111.114:8080/
+
+### Project Goal(s) and Description
+The goal of the project is to create a simple and accessible tool for checking websites for basic interface elements such as fields, buttons, and headings. The user enters a URL and specifies what needs to be checked, and the system runs an automated test and provides a result in the form of ✅/❌ for each question.
+
 ## Development
 
 ### Kanban board
@@ -117,3 +132,4 @@ Python CI:
 
 Link to architecutre README:
 https://github.com/cQu1x/Autotester/tree/main/internal
+
