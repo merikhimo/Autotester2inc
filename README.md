@@ -1,5 +1,5 @@
 # Inno Test
-![Logo](./Assets/logo.jpg)
+![Logo](./Assests/logo.jpg)
 ### MIT Licence:
 https://github.com/cQu1x/Autotester/blob/main/LICENSE
 
