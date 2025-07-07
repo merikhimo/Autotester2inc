@@ -17,6 +17,27 @@ The goal of the project is to create a simple and accessible tool for checking w
 
 ## Development
 
+## Roadmap
+
+### ✅ MVP-0
+- Interface Layout (Figma)  
+- User scenario elaboration  
+- Without working logic  
+
+### ✅ MVP-1
+- Front-to-back communication  
+- DOM parsing and checking by conditions  
+- Adding test steps (+)  
+- Entering URLs and conditions  
+
+### 🔵 MVP-2
+- Templates for tests  
+- Generating conditions through **AI**
+
+### 🔜 MVP-3
+- Export results in PDF format  
+- UI/UX testing with users
+
 ### Kanban board
 
 We use a GitLab Issue Board with the following columns:
