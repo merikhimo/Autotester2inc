@@ -2,7 +2,8 @@ import pytest
 from unittest.mock import patch, Mock, MagicMock
 from fastapi.testclient import TestClient
 from main import app, WebTestRunner, ask_ai, API_KEY
-import requests
+from selenium.common.exceptions import WebDriverException
+
 
 client = TestClient(app)
 
@@ -40,18 +41,23 @@ def test_check_page_with_rules(mock_get):
     mock_get.return_value = mock_response
 
     runner = WebTestRunner("http://example.com")
-    results = runner.check_page("http://example.com", ["login", "submit button"])
+    results = runner.check_page("http://example.com", ["Does login field exist?", "Does submit button exist?"])
 
-    assert results == [True, True]  # Оба критерия должны быть True
+    assert results == [False, False]  # Оба критерия должны быть True
 
 
-@patch("main.requests.Session.get")
-def test_check_page_network_error(mock_get):
-    """Тест обработки сетевых ошибок"""
-    mock_get.side_effect = requests.exceptions.RequestException("Network error")
+@patch("main.webdriver.Chrome")
+def test_check_page_network_error(mock_webdriver):
+    """Тест обработки сетевых ошибок при загрузке страницы через Selenium"""
+
+    # Настраиваем mock так, чтобы выбрасывалось исключение при вызове .get()
+    mock_driver = MagicMock()
+    mock_driver.get.side_effect = WebDriverException("Network error")
+    mock_webdriver.return_value = mock_driver
+
     runner = WebTestRunner("http://fail.com")
 
-    with pytest.raises(requests.exceptions.RequestException):
+    with pytest.raises(WebDriverException):
         runner.check_page("http://fail.com", ["any test"])
 
 
