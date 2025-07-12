@@ -4,3 +4,4 @@ lxml==5.4.0
 openai==1.84.0
 pytest==8.4.1
 requests==2.32.3
+selenium==4.34.0
