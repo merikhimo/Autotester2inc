@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/theme_provider.dart';
+import '../pages/login_page.dart';
+import '../pages/registration_page.dart';
 import 'custom_switch.dart';
 
 class DrawerCard extends StatefulWidget {
@@ -64,29 +65,29 @@ class _DrawerCardState extends State<DrawerCard>
           mainAxisSize: MainAxisSize.min,
           children: [
             // Top row with close button — уже готов у тебя
-            Align(
-              alignment: Alignment.topRight,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: widget.onClose,
-                  child: Container(
-                    width: 17,
-                    height: 17,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Color(0xFF898989), width: 1),
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      size: 12,
-                      color: Color(0xFF898989),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.topRight,
+            //   child: MouseRegion(
+            //     cursor: SystemMouseCursors.click,
+            //     child: GestureDetector(
+            //       onTap: widget.onClose,
+            //       child: Container(
+            //         width: 17,
+            //         height: 17,
+            //         alignment: Alignment.center,
+            //         decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           border: Border.all(color: Color(0xFF898989), width: 1),
+            //         ),
+            //         child: const Icon(
+            //           Icons.close,
+            //           size: 12,
+            //           color: Color(0xFF898989),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 25),
 
             // Dark mode toggle row
@@ -116,12 +117,12 @@ class _DrawerCardState extends State<DrawerCard>
               child: Divider(height: 1, thickness: 1),
             ),
 
-            // How to use
+            // Sign in
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
               title: Text(
-                "How to use",
+                "Log in",
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -134,7 +135,39 @@ class _DrawerCardState extends State<DrawerCard>
                 color: Color(0xFF898989),
               ),
               onTap: () {
-                // Future use
+                Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+              },
+            ),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(height: 1, thickness: 1),
+            ),
+
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                "Sign in",
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
+                color: Color(0xFF898989),
+              ),
+              onTap: () {
+                Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RegistrationPage()),
+            );
               },
             ),
 
