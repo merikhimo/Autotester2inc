@@ -64,7 +64,10 @@ class _DrawerCardState extends State<DrawerCard>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Top row with close button — уже готов у тебя
+            // Top row with close button 
+
+
+            // do we need this?
             // Align(
             //   alignment: Alignment.topRight,
             //   child: MouseRegion(
@@ -171,7 +174,7 @@ class _DrawerCardState extends State<DrawerCard>
               },
             ),
 
-            const Divider(height: 1, thickness: 1), // нижняя черта
+            const Divider(height: 1, thickness: 1), 
           ],
         ),
       ),

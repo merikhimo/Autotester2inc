@@ -37,6 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+
   void _nextStep() {
     if (currentStep < steps.length - 1) {
       setState(() {
@@ -73,9 +74,13 @@ class _WelcomePageState extends State<WelcomePage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
             const SizedBox(height: 30),
-            Container(
+            Expanded(
+            child: LayoutBuilder(builder: (context, constraints) {
+             double maxHeight = constraints.maxHeight > 500 ? 500 : constraints.maxHeight * 0.9;
+            
+            return Container(
               width: 500,
-              height: 500,
+              height: maxHeight,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -95,13 +100,13 @@ class _WelcomePageState extends State<WelcomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: Column(
                         children: [
                           Image.asset(
                             step.image,
                             width: 300,
-                            height: 150,
+                            height: maxHeight * 0.3,
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 5),
@@ -140,7 +145,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   ],
                 ),
               ),
-            ),
+            );
+            },),),
           ],
         ),
       ),
