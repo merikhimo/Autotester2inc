@@ -12,12 +12,39 @@ services:
       - TIMEOUT=3
       - PYTHON_API_URL=http://python-api:3000
       - FRONTEND_URL=http://frontend:3001
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_NAME=autotester
+      - JWT_SECRET=${JWT_SECRET:-your_strong_secret_here}
     volumes:
       - ./logs:/app/logs
     networks:
       - autotester-network
     depends_on:
-      - python-api
+      postgres:
+        condition: service_healthy
+      python-api:
+        condition: service_started
+  postgres:
+    image: postgres:13-alpine
+    container_name: autotester-postgres  # Consistent naming
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}  # Match Go service password
+      POSTGRES_DB: autotester
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Fixed volume declaration
+    ports:
+      - "5432:5432"
+    networks:
+      - autotester-network
+    healthcheck:  # Added healthcheck
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   python-api:
     build:
@@ -55,5 +82,8 @@ services:
 networks:
   autotester-network:
     driver: bridge
+
+volumes:  # Required for PostgreSQL persistence
+  postgres_data:
 
 # УДАЛЕН volumes (ненужный именованный том)
