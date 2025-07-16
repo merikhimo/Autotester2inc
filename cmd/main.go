@@ -2,27 +2,44 @@ package main
 
 import (
 	"Autotester/configs"
-	"Autotester/internal/middleware"
+	"Autotester/internal/auth"
+	"Autotester/internal/database"
 	"Autotester/internal/routes"
-	"fmt"
+	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	config := configs.LoadConfig()
-
-	router := http.NewServeMux()
-
-	routes.RegisterRoutes(router, config)
-	wrapped := middleware.Recovery(middleware.Logger(middleware.CORS(router)))
-
-	server := http.Server{
-		Addr:    ":8081",
-		Handler: wrapped,
-	}
-	fmt.Println("The server is listening on 8081")
-	err := server.ListenAndServe()
+	
+	// Initialize database
+	db, err := database.NewDB(
+		config.DBHost,
+		config.DBPort,
+		config.DBUser,
+		config.DBPassword,
+		config.DBName,
+	)
 	if err != nil {
-		return
+		log.Fatal("Database connection failed: ", err)
 	}
+
+	// Auto-migrate models
+	db.AutoMigrate(&auth.User{})
+
+	// Create router
+	router := mux.NewRouter()
+
+	// Setup routes
+	deps := &routes.RoutesHandlerDeps{
+		Config: config,
+		DB:     db,
+	}
+	routes.SetupAuthRoutes(router, deps)
+
+	// Start server
+	log.Println("Server starting on :8081")
+	log.Fatal(http.ListenAndServe(":8081", router))
 }
