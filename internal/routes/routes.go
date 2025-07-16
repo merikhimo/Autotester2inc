@@ -6,10 +6,6 @@ import (
 	"net/http"
 )
 
-type RoutesHandlerDeps struct {
-	Config *configs.Config
-}
-
 func RegisterRoutes(router *http.ServeMux, config *configs.Config) {
 	scanHandler := handlers.NewCheckUrlHandler(config)
 	testsHandler := handlers.NewTestsHandler(config)

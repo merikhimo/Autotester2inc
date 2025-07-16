@@ -1,32 +1,27 @@
 FROM golang:1.23-alpine AS builder
-
 WORKDIR /app
 
-# First copy only the files needed for dependencies
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
+RUN go mod tidy
 
-# Copy all remaining files (including the wait script)
 COPY . .
-
-# Build the application
 RUN go build -o autotester ./cmd/main.go
 
-FROM alpine:latest
+# Сразу положим скрипт в корень builder‑стадии
+COPY cmd/wait-for-postgres.sh ./wait-for-postgres.sh
+RUN chmod +x ./wait-for-postgres.sh
 
+FROM alpine:latest
 WORKDIR /app
 
-# Copy built binary and configs
+# Бинарь, конфиги
 COPY --from=builder /app/autotester .
 COPY --from=builder /app/configs ./configs
 
-# Copy the wait script directly from host
-COPY wait-for-postgres.sh .
-
-# Install dependencies
-RUN apk add --no-cache bash postgresql-client && \
-    chmod +x wait-for-postgres.sh
+# Скрипт из builder
+COPY --from=builder /wait-for-postgres.sh .
+RUN apk add --no-cache bash postgresql-client
 
 ENV TIMEOUT=3 \
     PYTHON_API_URL=http://python-api:3000 \
@@ -40,4 +35,5 @@ ENV TIMEOUT=3 \
 
 EXPOSE 8081
 
+RUN ls -al /app
 CMD ["./wait-for-postgres.sh", "postgres", "5432", "./autotester"]
