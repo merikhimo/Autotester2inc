@@ -1,13 +1,44 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../widgets/appbars/appbar_with_text.dart';
 import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+Future<void> registerUser(String email, String password) async {
+  final url = Uri.parse('http://localhost:8081/auth/register');  
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      log('success: $responseData');
+    } else {
+      
+      log('error: ${response.statusCode}');
+    }
+  } catch (e) {
+    log('error: $e');
+  }
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -23,15 +54,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
-
-      //затычка
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("success!"),
-          content: Text("Email: $email\n password: $password"),
-        ),
-      );
+      registerUser(email, password);
     }
   }
 
